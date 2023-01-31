@@ -1,0 +1,32 @@
+.post-div {
+    outline: 1px solid black;
+    height: 100%;
+    line-height: 100%;
+    padding: 10px;
+    margin: 10px;
+}
+
+@keyframes show {
+    0%{
+        opacity: 0;
+        height: 0px;
+        line-height: 0px;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    100%{
+        opacity: 1;
+        height: 100%;
+        line-height: 100%;
+        padding: 10px;
+        margin: 10px;
+    }
+}
+
+.new-post {
+    animation-name: show;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
+}

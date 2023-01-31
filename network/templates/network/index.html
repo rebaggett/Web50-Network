@@ -1,0 +1,41 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="new-post-form">
+        <form method="post" onsubmit="return false">
+            {% csrf_token %}
+            <label id="new-post-form-label" for="new-post-content">New Post</label>
+            <textarea id="new-post-content" name="new-post-content"
+                rows="5" cols="33">What's on your mind?</textarea>
+            <button type="submit" id="new-post-button">Post</button>
+        </form>
+    </div>
+    {% for post in page_obj %}
+    <div id="post-list">
+        <div class="post-div">
+
+            <p class="post-author">{{ post.author }}</p>
+            <p class="post-content">{{ post.content }}</p>
+            <p class="post-timestamp">{{ post.timestamp }}</p>
+            <p class="post-likes">{{ post.likes|length }}</p>
+        </div>
+    </div>
+    {% endfor %}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                {% if page_obj.previous_page_number != 1 %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                {% endif %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+      </nav>
+{% endblock %}
