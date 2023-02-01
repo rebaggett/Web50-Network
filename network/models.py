@@ -3,7 +3,8 @@ from django.db import models
 
 
 class User(AbstractUser):
-    following = models.ManyToManyField('self', blank=True, related_name="followers")
+    image = models.URLField(default="https://freesvg.org/img/dinopixel.png")
+    following = models.ManyToManyField("self", blank=True, related_name="followers")
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="posts")

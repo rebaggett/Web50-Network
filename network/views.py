@@ -25,11 +25,15 @@ def index(request):
     })
 
 def profile_view(request, id):
-    # Get user that username corresponds to
-    # username = parse.unquote(username)
+    # Get user that id corresponds to
     profile_user = User.objects.get(pk = id)
-    
 
+    #Get current user
+    if request.user.is_authenticated:
+        current_user = User.objects.get(pk = request.user.pk)
+    else:
+        current_user = None
+    
     # Gets posts related to profile and paginates them
     post_list = Post.objects.filter(author=profile_user.pk).order_by("-timestamp")
     paginator = Paginator(post_list, 10)
@@ -38,7 +42,8 @@ def profile_view(request, id):
 
     return render(request, "network/profile.html", {
         "page_obj": page_obj,
-        "profile_user": profile_user
+        "profile_user": profile_user,
+        "current_user": current_user
     })
 
 @login_required()

@@ -1,9 +1,28 @@
 .post-div {
+    background-color: rgb(197, 192, 192);
     outline: 1px solid black;
     height: 100%;
     line-height: 100%;
     padding: 10px;
     margin: 10px;
+}
+
+#new-post-form {
+    margin-top: 5px;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    margin-right: 20px;
+    padding: 5px;
+}
+
+#new-post-form-label {
+    display: block;
+    font-weight: bold;
+}
+
+#new-post-button {
+    border: none;
+    background-color: rgb(155, 120, 120);
 }
 
 @keyframes show {
@@ -29,4 +48,42 @@
     animation-duration: 2s;
     animation-fill-mode: forwards;
     animation-play-state: paused;
+}
+
+#profile-head {
+    display: flex;
+    margin: 10px;
+    padding: 10px;
+    align-items: flex-end;
+}
+
+#profile-img {
+    height: 100px;
+    width: 100px;
+    border-radius: 10%;
+    border: 3px solid grey;
+}
+
+.follow-div{
+    display: block;
+    margin: 10px;
+}
+
+.follow-div:hover{
+    cursor: pointer;
+}
+
+.follow-div > * {
+    margin: 3px;
+    text-decoration: none;
+}
+
+.dialog-detail-div {
+    position: relative;
+    visibility:hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 400px;
+    min-height: 200px;
+    width: 400px;
 }

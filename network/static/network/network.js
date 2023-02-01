@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
    
+    // Change profile URL to username
     const profile_link = document.querySelector('#user-profile-link');
     const user_id = profile_link.href;
     console.log(user_id);
@@ -11,7 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
         this.dispatchEvent(popStateEvent);
     }
 
+    // Add event listeners
     document.querySelector('#new-post-button').addEventListener('click', () => create_post());
+    document.getElementById('followers-div').addEventListener('click', ()=> get_followers(user_id));
+    document.getElementById('following-div').addEventListener('click', ()=> get_following(user_id));
 
 })
 
@@ -77,3 +81,5 @@ function get_cookie(cookie){
     })
     return result;
 }
+
+function get_followers()

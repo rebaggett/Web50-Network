@@ -1,25 +1,24 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <div class="new-post-form">
+    <div id="new-post-form">
         <form method="post" onsubmit="return false">
             {% csrf_token %}
             <label id="new-post-form-label" for="new-post-content">New Post</label>
             <textarea id="new-post-content" name="new-post-content"
-                rows="5" cols="33">What's on your mind?</textarea>
+                rows="5" cols="60">What's on your mind?</textarea>
             <button type="submit" id="new-post-button">Post</button>
         </form>
     </div>
     {% for post in page_obj %}
-    <div id="post-list">
-        <div class="post-div">
-
-            <p class="post-author">{{ post.author }}</p>
-            <p class="post-content">{{ post.content }}</p>
-            <p class="post-timestamp">{{ post.timestamp }}</p>
-            <p class="post-likes">{{ post.likes|length }}</p>
+        <div id="post-list">
+            <div class="post-div">
+                <p class="post-author">{{ post.author }}</p>
+                <p class="post-content">{{ post.content }}</p>
+                <p class="post-timestamp">{{ post.timestamp }}</p>
+                <p class="post-likes">{{ post.likes|length }}</p>
+            </div>
         </div>
-    </div>
     {% endfor %}
     <nav aria-label="Page navigation example">
         <ul class="pagination">

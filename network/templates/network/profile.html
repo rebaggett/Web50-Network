@@ -3,7 +3,25 @@
 {% block title %} {{ profile_user.username }} {% endblock %}
 
 {% block body %}
-    <div class="new-post-form">
+    <div id = "profile-head">
+        <img src="{{ profile_user.image }}" alt="Image of {{profile_user.username}}" id="profile-img"/>
+        <div class="follow-div" id="followers-div">
+            <p class="follow-head">Followers</p>
+            <p class="follow-body">{{ profile_user.followers|length }}</p>
+        </div>
+        <div class="follow-div" id="following-div">
+            <p class="follow-head">Following</p>
+            <p class="follow-body">{{ profile_user.following|length }}</p>
+        </div>
+        {% if profile_user.pk != current_user.pk and current_user %}
+            {% if current_user in profile_user.followers %}
+                <button id="follow-button">Unfollow</button>
+            {% else %}
+                <button id="follow-button">Follow</button>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div id="new-post-form">
         <form method="post" onsubmit="return false">
             {% csrf_token %}
             <label id="new-post-form-label" for="new-post-content">New Post</label>
@@ -14,15 +32,18 @@
     </div>
     {% for post in page_obj %}
     <div id="post-list">
-        <div class="post-div">
-
+        <div class="post-div" id="post{{post.pk}}}">
             <p class="post-author">{{ post.author }}</p>
             <p class="post-content">{{ post.content }}</p>
             <p class="post-timestamp">{{ post.timestamp }}</p>
-            <p class="post-likes">{{ post.likes|length }}</p>
+            <p class="post-likes" id="post{{post.pk}}-likes">{{ post.likes|length }}</p>
         </div>
     </div>
     {% endfor %}
+    <div class="dialog-detail-div">
+        <div class="dialog-detail-head"></div>
+        <div class="dialog-detail-body"></div>
+    </div>
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             {% if page_obj.has_previous %}
