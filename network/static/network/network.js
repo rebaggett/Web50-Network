@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add event listeners
     document.querySelector('#new-post-button').addEventListener('click', () => create_post());
     document.getElementById('followers-div').addEventListener('click', ()=> get_followers(user_id));
-    document.getElementById('following-div').addEventListener('click', ()=> get_following(user_id));
+    // document.getElementById('following-div').addEventListener('click', ()=> get_following(user_id));
 
 })
 
@@ -82,4 +82,45 @@ function get_cookie(cookie){
     return result;
 }
 
-function get_followers()
+function get_followers(user_id){
+
+    // Get followers from API
+    fetch(`/${user_id}/followers`)
+    .then(response => response.json())
+    .then(followers => {
+        console.log(followers);
+
+        // Shows dialog box and set header info to Followers
+        popupDiv =  document.getElementById('dialog-detail-div');
+        popupDiv.style.visibility = 'visible';
+        document.getElementById('dialog-detail-head').innerHTML = 'Followers';
+
+        for (const follower of followers) {
+
+            // Create container with image and username for each follower
+            const followerDiv = document.createElement('div');
+            const followerImage = document.createElement('img');
+            const followerName = document.createElement('span');
+
+            // Clicking anywhere on the div will load follower's profile
+            followerDiv.onClick = `location.href=/${follower.id}`
+
+            // Set image attributes
+            followerImage.href = `${follower.image}`;
+            followerImage.setAttribute('id', `follower${follower.id}-img`);
+            followerImage.className = 'follower-img';
+
+            // Set name attributes
+            followerName.setAttribute('id', `follower-${follower.username}`);
+            followerName.className = 'follower-username';
+            followerName.innerHTML = `${follower.username}`;
+
+            //Append to popup
+            followerDiv.appendChild(followerImage);
+            followerDiv.appendChild(followerName);
+            popupDiv.appendChild(followerDiv);
+
+        }
+
+    })
+}

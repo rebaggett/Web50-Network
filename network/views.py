@@ -88,6 +88,13 @@ def create_post(request):
         "timestamp": timestamp,
     }, status = 201)
 
+def followers(request, profile_id):
+    
+    current_user = request.user.pk
+    followers = User.objects.filter(following = current_user)
+    followers = followers.order_by("username").all()
+    return JsonResponse([follower.serialize() for follower in followers], safe=False)
+
 def login_view(request):
     if request.method == "POST":
 

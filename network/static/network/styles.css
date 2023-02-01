@@ -78,9 +78,9 @@
     text-decoration: none;
 }
 
-.dialog-detail-div {
+#dialog-detail-div {
     position: relative;
-    visibility:hidden;
+    visibility: hidden;
     display: flex;
     flex-direction: column;
     max-height: 400px;
