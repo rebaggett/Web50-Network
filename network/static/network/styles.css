@@ -104,7 +104,7 @@
 #follow-button {
     border: none;
     border-radius: 10%;
-    background-color: rgb(155, 120, 120);
+    background-color: rgba(155, 120, 120, 0.527);
     padding: 5px;
     height: fit-content;
     width: 60%;
@@ -132,39 +132,53 @@
 
 #popup-div {
     position: absolute;
-    visibility: visible;
+    visibility: hidden;
     min-height: 20%;
     max-height: 30%;
     width: 25%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: red;
+    border: 2px solid rgb(177, 177, 177);
+    border-radius: 10px;
+    box-shadow: -2px 1px 29px -6px;
+    background-color: white;
 }
 
 #popup-head {
+    display: flex;
+    flex-direction: row;
     height: min-content;
-    background-color: aqua;
-    border-bottom: 1px solid gray;
+    color: rgb(155, 120, 120);
+    font-weight:600;
+    border-bottom: 1px solid rgb(155, 120, 120);
     width: 100%;
-    text-align: center;
+    justify-content: center;
     padding: 5px;
+    border-radius: 10px 10px 0px 0px;
+}
+
+#popup-close-container {
+    height:100%;
 }
 
 #popup-close {
     border: none;
+    border-radius: 10%;
     background-color: inherit;
     position: absolute;
     right: 5px;
-    height: inherit;
 }
 
 #popup-body {
+    display: flex;
+    flex-direction: column;
+    height: 80%;
     padding: 5px;
 }
 
 .follower-container {
-    height:20%;
+    height:5vh;
     width: 100%;
     text-decoration: none;
     color: inherit;
@@ -173,15 +187,32 @@
 .follower-container:hover {
     text-decoration: none;
     color: inherit;
+    font-size: 1.1em;
+    border: 1px solid rgba(177, 177, 177, 0.24);
 }
 
 .follower-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     height: 100%;
     width: 100%;
 }
 
-.follower-img {
+.follower-img-div {
     height: 100%;
-    width: 10%;
-    overflow: hidden;
+    width: 20%;
+    display: flex;
+    place-content: center;
+    place-items: center;
+}
+
+.follower-img {
+    height: 75%;
+    border-radius: 10%;
+    border: 1px solid rgb(155, 120, 120);
+}
+
+.follower-username {
+    width: 80%;
 }

@@ -1,3 +1,7 @@
+let followersFunction = false;
+let followingFunction = false;
+let likeFunction = false;
+
 document.addEventListener('DOMContentLoaded', function() {
    
     // Change profile URL to username
@@ -15,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#new-post-button').addEventListener('click', () => create_post());
     document.getElementById('followers-div').addEventListener('click', ()=> get_followers(user_id));
     // document.getElementById('following-div').addEventListener('click', ()=> get_following(user_id));
+    document.getElementById('popup-close').addEventListener('click', ()=> close_popup());
 
 })
 
@@ -82,6 +87,28 @@ function get_cookie(cookie){
 }
 
 function get_followers(id){
+    // Identify popup elements
+    popupDiv = document.getElementById('popup-div');
+    popupHead = document.getElementById('popup-head')
+    popupBody = document.getElementById('popup-body')
+
+    // If function has already been run, make sure it's visible then end
+    if (followersFunction === true) {
+        if (popupDiv.style.visibility === 'hidden') {
+            popupDiv.style.visibility = 'visible';
+        }
+        return false;
+    }
+    // If non-follower elements populate the popup, remove them and set other functions to false
+    else if (followingFunction === true || likeFunction === true) {
+        headText = popupHead.nodeType === 3;
+        headText.remove();
+        while(popupBody.lastChild) {
+            popupBody.removeChild(popupBody.lastChild);
+        }
+        followingFunction = false;
+        likeFunction = false;
+    }
 
     // Get followers from API
     fetch(`/${id}/followers`)
@@ -90,10 +117,8 @@ function get_followers(id){
         console.log(followers);
 
         // Shows dialog box and set header info to Followers
-        popupDiv =  document.getElementById('popup-div');
         popupDiv.style.visibility = 'visible';
-        document.getElementById('popup-head').prepend('Followers');
-        popupBody = document.getElementById('popup-body')
+        popupHead.prepend('Followers');
 
         for (const follower of followers) {
 
@@ -111,7 +136,7 @@ function get_followers(id){
 
             // Set image attributes
             imageDiv.classList.add('follower-img-div');
-            followerImage.setAttribute('href', `${follower.image}`);
+            followerImage.setAttribute('src', `${follower.image}`);
             followerImage.setAttribute('id', `follower${follower.id}-img`);
             followerImage.className = 'follower-img';
 
@@ -122,13 +147,19 @@ function get_followers(id){
             followerName.innerHTML = `${follower.username}`;
 
             //Append to popup
-            imageDiv.appendChild(followerImage);
             followerDiv.appendChild(imageDiv);
+            imageDiv.appendChild(followerImage);
             followerDiv.appendChild(followerName);
             followerLink.appendChild(followerDiv);
             popupBody.appendChild(followerLink);
 
         }
-
+        // Do not run function again unless box is closed
+        followersFunction = true;
     })
+}
+
+function close_popup(){
+    popupDiv = document.getElementById('popup-div');
+    popupDiv.style.visibility = 'hidden';
 }
