@@ -51,39 +51,137 @@
 }
 
 #profile-head {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: 10vh 10vh;
+    height: 20vh;
+    width: 100vw;
+}
+
+#profile-img-container {
+    grid-column: 1/2;
+    grid-row: 1/3;
     display: flex;
-    margin: 10px;
-    padding: 10px;
-    align-items: flex-end;
+    place-content: center;
+    place-items: center;
 }
 
 #profile-img {
-    height: 100px;
-    width: 100px;
+    height: 75%;
     border-radius: 10%;
-    border: 3px solid grey;
+    border: 3px solid rgb(155, 120, 120);
+}
+
+#profile-username {
+    grid-column: 2/11;
+    grid-row: 1;
+    padding: 10px;
+    line-height: 10vh;
+}
+
+#followers-div {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+#following-div {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+#follow-button-container {
+    grid-column: 4;
+    grid-row: 2;
+    height: 100%;
+    width: 100%;
+    place-self: center;
+    display: flex;
+    margin: 5px;
+    padding: 10px;
+    align-items: center;
+}
+
+#follow-button {
+    border: none;
+    border-radius: 10%;
+    background-color: rgb(155, 120, 120);
+    padding: 5px;
+    height: fit-content;
+    width: 60%;
+    
 }
 
 .follow-div{
-    display: block;
-    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    margin: 5px;
+    padding: 10px;
+    font-size: 18px;
 }
 
 .follow-div:hover{
     cursor: pointer;
 }
 
-.follow-div > * {
-    margin: 3px;
-    text-decoration: none;
+.follow-head {
+    color: rgb(155, 120, 120);
+    font-weight:500;
+    margin-bottom: 3px;
 }
 
-#dialog-detail-div {
-    position: relative;
-    visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    max-height: 400px;
-    min-height: 200px;
-    width: 400px;
+#popup-div {
+    position: absolute;
+    visibility: visible;
+    min-height: 20%;
+    max-height: 30%;
+    width: 25%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: red;
+}
+
+#popup-head {
+    height: min-content;
+    background-color: aqua;
+    border-bottom: 1px solid gray;
+    width: 100%;
+    text-align: center;
+    padding: 5px;
+}
+
+#popup-close {
+    border: none;
+    background-color: inherit;
+    position: absolute;
+    right: 5px;
+    height: inherit;
+}
+
+#popup-body {
+    padding: 5px;
+}
+
+.follower-container {
+    height:20%;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.follower-container:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.follower-div {
+    height: 100%;
+    width: 100%;
+}
+
+.follower-img {
+    height: 100%;
+    width: 10%;
+    overflow: hidden;
 }

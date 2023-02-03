@@ -27,6 +27,8 @@ def index(request):
 def profile_view(request, id):
     # Get user that id corresponds to
     profile_user = User.objects.get(pk = id)
+    followers = profile_user.followers.all().count()
+    following = profile_user.following.all().count()
 
     #Get current user
     if request.user.is_authenticated:
@@ -43,7 +45,9 @@ def profile_view(request, id):
     return render(request, "network/profile.html", {
         "page_obj": page_obj,
         "profile_user": profile_user,
-        "current_user": current_user
+        "current_user": current_user,
+        "followers": followers,
+        "following": following
     })
 
 @login_required()
@@ -88,10 +92,9 @@ def create_post(request):
         "timestamp": timestamp,
     }, status = 201)
 
-def followers(request, profile_id):
-    
-    current_user = request.user.pk
-    followers = User.objects.filter(following = current_user)
+def followers(request, id):
+
+    followers = User.objects.filter(following = id)
     followers = followers.order_by("username").all()
     return JsonResponse([follower.serialize() for follower in followers], safe=False)
 

@@ -2,9 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
    
     // Change profile URL to username
     const profile_link = document.querySelector('#user-profile-link');
-    const user_id = profile_link.href;
-    console.log(user_id);
-    if (window.location.href === `${user_id}`) {
+    const user_id = profile_link.dataset.id;
+    if (window.location.href.endsWith(`/${user_id}`)) {
         let username = profile_link.dataset.username;
         username = username.replace(/ /g,"_");
         window.history.pushState({username: username}, "", `${username}`);
@@ -82,43 +81,52 @@ function get_cookie(cookie){
     return result;
 }
 
-function get_followers(user_id){
+function get_followers(id){
 
     // Get followers from API
-    fetch(`/${user_id}/followers`)
+    fetch(`/${id}/followers`)
     .then(response => response.json())
     .then(followers => {
         console.log(followers);
 
         // Shows dialog box and set header info to Followers
-        popupDiv =  document.getElementById('dialog-detail-div');
+        popupDiv =  document.getElementById('popup-div');
         popupDiv.style.visibility = 'visible';
-        document.getElementById('dialog-detail-head').innerHTML = 'Followers';
+        document.getElementById('popup-head').prepend('Followers');
+        popupBody = document.getElementById('popup-body')
 
         for (const follower of followers) {
 
             // Create container with image and username for each follower
+            const followerLink = document.createElement('a')
             const followerDiv = document.createElement('div');
+            const imageDiv = document.createElement('div');
             const followerImage = document.createElement('img');
             const followerName = document.createElement('span');
 
             // Clicking anywhere on the div will load follower's profile
-            followerDiv.onClick = `location.href=/${follower.id}`
+            followerLink.setAttribute('href', `/${follower.id}`);
+            followerLink.classList.add('follower-container');
+            followerDiv.classList.add('follower-div');
 
             // Set image attributes
-            followerImage.href = `${follower.image}`;
+            imageDiv.classList.add('follower-img-div');
+            followerImage.setAttribute('href', `${follower.image}`);
             followerImage.setAttribute('id', `follower${follower.id}-img`);
             followerImage.className = 'follower-img';
 
             // Set name attributes
-            followerName.setAttribute('id', `follower-${follower.username}`);
+            followerUsername = follower.username.replace(/ /g,"-");
+            followerName.setAttribute('id', `follower-${followerUsername}`);
             followerName.className = 'follower-username';
             followerName.innerHTML = `${follower.username}`;
 
             //Append to popup
-            followerDiv.appendChild(followerImage);
+            imageDiv.appendChild(followerImage);
+            followerDiv.appendChild(imageDiv);
             followerDiv.appendChild(followerName);
-            popupDiv.appendChild(followerDiv);
+            followerLink.appendChild(followerDiv);
+            popupBody.appendChild(followerLink);
 
         }
 
