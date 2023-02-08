@@ -18,4 +18,14 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, blank=True, null=True, related_name="liked_posts")
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    edited = models.DateTimeField(null=True)
+    edited = models.DateTimeField(auto_now=True)
+
+    def serialize(self):
+        return {
+            "id": self.pk,
+            "author": self.author.username,
+            "likes": [user.pk for user in self.likes.all()],
+            "content": self.content,
+            "timestamp": self.timestamp.strftime("%b. %d, %Y, at %I:%M %p"),
+            "edited": self.edited.strftime("%b. %d, %Y, at %I:%M %p")
+        }

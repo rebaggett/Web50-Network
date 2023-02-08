@@ -26,7 +26,7 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Following</a>
+                        <a class="nav-link" href="{% url 'following' %}">Following</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
@@ -46,6 +46,15 @@
         <div class="body">
             {% block body %}
             {% endblock %}
+        </div>
+        <div id="popup-div">
+            <div id="popup-head">
+                <span id="popup-head-text"></span>
+                <div id="popup-close-container">
+                    <button type="button" id="popup-close">X</button>
+                </div>
+            </div>
+            <div id="popup-body"></div>
         </div>
     </body>
 </html>

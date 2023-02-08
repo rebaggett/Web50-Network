@@ -5,14 +5,19 @@
 {% block body %}
     <div id = "profile-head">
         <div id="profile-img-container">
-            <img src="{{ profile_user.image }}" alt="Image of {{profile_user.username}}" id="profile-img"/>
+            {% if profile_user.pk == current_user.pk %}
+                <img src="{{ profile_user.image }}" alt="Image of {{profile_user.username}}" id="profile-img"
+                    role="button" onclick="change_image( '{{current_user.pk}}' );" onmouseover="this.style.cursor ='pointer'"/>
+            {% else %}
+                <img src="{{ profile_user.image }}" alt="Image of {{profile_user.username}}" id="profile-img"/>
+            {% endif %}
         </div>
         <h1 id="profile-username">{{ profile_user.username }}</h1>
-        <div class="follow-div" id="followers-div">
+        <div class="follow-div" id="followers-div" onclick="get_followers( '{{profile_user.pk}}' );">
             <p class="follow-head">Followers</p>
             <p class="follow-body">{{ followers }}</p>
         </div>
-        <div class="follow-div" id="following-div">
+        <div class="follow-div" id="following-div" onclick="get_following( '{{profile_user.pk}}' );">
             <p class="follow-head">Following</h2>
             <p class="follow-body">{{ following }}</p>
         </div>
@@ -30,28 +35,32 @@
         <form method="post" onsubmit="return false">
             {% csrf_token %}
             <label id="new-post-form-label" for="new-post-content">New Post</label>
-            <textarea id="new-post-content" name="new-post-content"
+            <textarea id="new-post-content" name="new-post-content" onfocus="clear_content(this);"
                 rows="5" cols="60">What's on your mind?</textarea>
             <button type="submit" id="new-post-button">Post</button>
         </form>
     </div>
-    {% for post in page_obj %}
     <div id="post-list">
-        <div class="post-div" id="post{{post.pk}}}">
-            <p class="post-author">{{ post.author }}</p>
-            <p class="post-content">{{ post.content }}</p>
-            <p class="post-timestamp">{{ post.timestamp }}</p>
-            <p class="post-likes" id="post{{post.pk}}-likes">{{ post.likes|length }}</p>
-        </div>
-    </div>
-    {% endfor %}
-    <div id="popup-div">
-        <div id="popup-head">
-            <div id="popup-close-container">
-                <button type="button" id="popup-close">X</button>
+        {% for post in page_obj %}
+            <div class="post-div" id="post{{post.pk}}-div">
+                <a class="post-author" href="/{{post.author.pk}}">{{ post.author }}</a>
+                <span class="post-timestamp"> roared on {{ post.timestamp }}:</span>
+                {% if post.edited != post.timestamp %}
+                    <span class="post-edit-time">Edited on {{post.edited}}</span>
+                {% endif %}
+                <p class="post-content">{{ post.content }}</p>
+                {% if post.author.pk == user.pk %}
+                    <textarea class="post-content-edit">{{post.content}}</textarea>
+                    <span class="post-edit" role="button" onclick="edit_content('{{post.pk}}');">Edit</span>
+                {% endif %}
+                <span class="post-likes">
+                    {% if user.is_authenticated %}
+                        <span class="post-like-button" role="button" title="Like this post" onclick="like_post( '{{post.pk}}','{{user.pk}}' );"></span>
+                    {% endif %}
+                    <span class="post-likes-length" title="View who has liked this post" onclick="get_likes( '{{post.pk}}' );">{{ post.likes.count }}</span>
+                </span>
             </div>
-        </div>
-        <div id="popup-body"></div>
+        {% endfor %}
     </div>
     <nav aria-label="Page navigation example">
         <ul class="pagination">

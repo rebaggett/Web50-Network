@@ -1,6 +1,4 @@
 import json
-import datetime
-from urllib import parse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -54,7 +52,8 @@ def profile_view(request, id):
 def following_view(request):
     current_user = User.objects.get(pk=request.user.pk)
 
-    post_list = Post.objects.filter(author__in = current_user.following)
+    post_list = Post.objects.filter(author__in = current_user.following.all())
+    post_list =post_list.order_by('-timestamp')
     paginator = Paginator(post_list, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -74,7 +73,7 @@ def create_post(request):
     author = data.get("author", "")
     content = data.get("content","")
 
-    author = User.objects.get(username=author)
+    author = User.objects.get(pk=author)
     
     post = Post(
         author=author,
@@ -82,21 +81,72 @@ def create_post(request):
     )
     post.save()
 
-    timestamp = post.timestamp.strftime('%b. %d, %Y, %I:%M %p')
+    return JsonResponse(post.serialize(), status = 201)
 
-    return JsonResponse({
-        "message": "Post created successfully.",
-        "id": post.pk,
-        "author": post.author.username,
-        "content": post.content,
-        "timestamp": timestamp,
-    }, status = 201)
+@login_required()
+def edit_post(request, id):
+    
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        content = data.get("content","")
+        userId = data.get("user","")
+
+        userId = int(userId)
+
+        post = Post.objects.get(pk = id)
+        user = User.objects.get(pk = userId)
+
+        if user != post.author:
+            return JsonResponse({"error": "Users may only edit their own posts."})
+
+        post.content = content
+        post.save(update_fields=["content", "edited"])
+
+        return JsonResponse(post.serialize(), status=201, safe=False)
+
+def like_post(request, id):
+    
+    if request.method =="PUT":
+        post = Post.objects.get(pk = id)
+        if request.user in post.likes.all():
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+
+        return JsonResponse(post.serialize(), safe=False, status=201)
 
 def followers(request, id):
 
     followers = User.objects.filter(following = id)
     followers = followers.order_by("username").all()
     return JsonResponse([follower.serialize() for follower in followers], safe=False)
+
+def following(request, id):
+
+    following = User.objects.filter(followers = id)
+    following = following.order_by("username").all()
+    return JsonResponse([person.serialize() for person in following], safe=False)
+
+def likes(request, id):
+
+    likers = User.objects.filter(liked_posts = id)
+    likers = likers.order_by("username").all()
+    return JsonResponse([liker.serialize() for liker in likers], safe=False)
+
+def update_profile(request, id):
+
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        image = data.get("img", "")
+
+        profile = User.objects.get(pk = id)
+        profile.image = image
+        profile.save(update_fields=["image"])
+        
+        return JsonResponse({
+            "message": "Profile updated successfully.",
+            "img": profile.image,
+        }, status=201)
 
 def login_view(request):
     if request.method == "POST":
@@ -117,11 +167,9 @@ def login_view(request):
     else:
         return render(request, "network/login.html")
 
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":

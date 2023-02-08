@@ -1,25 +1,39 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+    {% if user.is_authenticated %}
     <div id="new-post-form">
         <form method="post" onsubmit="return false">
             {% csrf_token %}
             <label id="new-post-form-label" for="new-post-content">New Post</label>
-            <textarea id="new-post-content" name="new-post-content"
+            <textarea id="new-post-content" name="new-post-content" onfocus="clear_content(this);"
                 rows="5" cols="60">What's on your mind?</textarea>
             <button type="submit" id="new-post-button">Post</button>
         </form>
     </div>
-    {% for post in page_obj %}
-        <div id="post-list">
-            <div class="post-div">
-                <p class="post-author">{{ post.author }}</p>
+    {% endif %}
+    <div id="post-list">
+        {% for post in page_obj %}
+            <div class="post-div" id="post{{post.pk}}-div">
+                <a class="post-author" href="/{{post.author.pk}}">{{ post.author }}</a>
+                <span class="post-timestamp"> roared on {{ post.timestamp }}:</span>
+                {% if post.edited != post.timestamp %}
+                    <span class="post-edit-time">Edited on {{post.edited}}</span>
+                {% endif %}
                 <p class="post-content">{{ post.content }}</p>
-                <p class="post-timestamp">{{ post.timestamp }}</p>
-                <p class="post-likes">{{ post.likes|length }}</p>
+                {% if post.author.pk == user.pk %}
+                    <textarea class="post-content-edit">{{post.content}}</textarea>
+                    <span class="post-edit" role="button" onclick="edit_content('{{post.pk}}', '{{user.pk}}');">Edit</span>
+                {% endif %}
+                <span class="post-likes">
+                    {% if user.is_authenticated %}
+                        <span class="post-like-button" role="button" title="Like this post" onclick="like_post( '{{post.pk}}','{{user.pk}}' );"></span>
+                    {% endif %}
+                    <span class="post-likes-length" title="View who has liked this post" onclick="get_likes( '{{post.pk}}' );">{{ post.likes.count }}</span>
+                </span>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             {% if page_obj.has_previous %}
