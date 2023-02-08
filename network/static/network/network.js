@@ -48,6 +48,8 @@ function create_post(){
 
         // Create elements for new post div
         const author = document.createElement('a');
+        const authorImg = document.createElement('img');
+        const authorText = document.createElement('span');
         const timestamp = document.createElement('span');
         const content = document.createElement('p');
         const editArea = document.createElement('textarea');
@@ -59,11 +61,13 @@ function create_post(){
         // Set author information
         author.setAttribute('class', 'post-author');
         author.setAttribute('href', `/${current_author}`);
-        author.innerHTML = post.author;
-        
+        authorImg.setAttribute('class', 'post-author-image');
+        authorImg.setAttribute('src', `${post.authorimage}`);
+        authorText.innerHTML = post.author;
+
         // Set timestamp information
         timestamp.setAttribute('class', 'post-timestamp');
-        timestamp.innerHTML = `Roared on ${post.timestamp}:`;
+        timestamp.innerHTML = `roared on ${post.timestamp}:`;
         
         // Set content information
         content.setAttribute('class', 'post-content');
@@ -89,6 +93,8 @@ function create_post(){
         likeLength.innerHTML = post.likes.length;
 
         // Add elements to created post and prepend created post to post list div
+        author.appendChild(authorImg);
+        author.appendChild(authorText);
         likes.appendChild(likeButton);
         likes.appendChild(likeLength);
         createdPost.appendChild(author);
@@ -218,6 +224,36 @@ function like_post(id, user){
             likeCount.innerHTML = post.likes.length;
         } else {
             likeCount.innerHTML = 0;
+        }
+    })
+}
+
+function follow_user(profile, user){
+    fetch(`/${profile}/follow`, {
+        method: 'PUT',
+        headers: {'X-CSRFToken': get_cookie('csrftoken')},
+        mode: 'same-origin',
+        body: JSON.stringify({
+            "follower": user
+        })
+    })
+    .then(response => response.json())
+    .then(profile => {
+        const followerDiv = document.getElementById(`followers-div`);
+        const followers = followerDiv.querySelector('.follow-body');
+        const followBtn = document.getElementById('follow-button');
+        
+        if (profile.followers.length){
+            followers.innerHTML = profile.followers.length;
+        } else {
+            followers.innerHTML = 0;
+        }
+
+        if (followBtn.textContent === 'Follow'){
+            followBtn.textContent = 'Unfollow';
+        } else {
+            followBtn.textContent = 'Follow';
+
         }
     })
 }

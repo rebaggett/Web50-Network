@@ -23,10 +23,10 @@
         </div>
         <div id="follow-button-container">
             {% if profile_user.pk != current_user.pk and current_user %}
-                {% if current_user in profile_user.followers %}
-                    <button id="follow-button">Unfollow</button>
+                {% if current_user in profile_user.followers.all %}
+                    <button id="follow-button" onclick="follow_user('{{profile_user.pk}}', '{{user.pk}}');">Unfollow</button>
                     {% else %}
-                    <button id="follow-button">Follow</button>
+                    <button id="follow-button" onclick="follow_user('{{profile_user.pk}}', '{{user.pk}}');">Follow</button>
                 {% endif %}
             {% endif %}
         </div>               
@@ -43,7 +43,10 @@
     <div id="post-list">
         {% for post in page_obj %}
             <div class="post-div" id="post{{post.pk}}-div">
-                <a class="post-author" href="/{{post.author.pk}}">{{ post.author }}</a>
+                <a class="post-author" href="/{{post.author.pk}}">
+                    <img class="post-author-image" src="{{post.author.image}}">
+                    <span>{{ post.author }}</span>
+                </a>
                 <span class="post-timestamp"> roared on {{ post.timestamp }}:</span>
                 {% if post.edited != post.timestamp %}
                     <span class="post-edit-time">Edited on {{post.edited}}</span>
@@ -51,7 +54,7 @@
                 <p class="post-content">{{ post.content }}</p>
                 {% if post.author.pk == user.pk %}
                     <textarea class="post-content-edit">{{post.content}}</textarea>
-                    <span class="post-edit" role="button" onclick="edit_content('{{post.pk}}');">Edit</span>
+                    <span class="post-edit" role="button" onclick="edit_content('{{post.pk}}', '{{user.pk}}');">Edit</span>
                 {% endif %}
                 <span class="post-likes">
                     {% if user.is_authenticated %}

@@ -115,6 +115,23 @@ def like_post(request, id):
 
         return JsonResponse(post.serialize(), safe=False, status=201)
 
+def follow_user(request, id):
+    if request.method != "PUT":
+        return JsonResponse({"error": "POST request required."}, status=400)
+    
+    # data = json.loads(request.body)
+
+    # follower = data.get("follower")
+    # follower = int(follower)
+    # follower = User.objects.get()
+    profile = User.objects.get(pk = id)
+
+    if request.user in profile.followers.all():
+        profile.followers.remove(request.user)
+    else:
+        profile.followers.add(request.user)
+    return JsonResponse(profile.serialize(), safe=False, status=201)
+
 def followers(request, id):
 
     followers = User.objects.filter(following = id)

@@ -11,6 +11,8 @@ class User(AbstractUser):
             "id": self.pk,
             "username": self.username,
             "image": self.image,
+            "followers": [user.username for user in self.followers.all()],
+            "following": [user.username for user in self.following.all()],
         }
 
 class Post(models.Model):
@@ -24,6 +26,7 @@ class Post(models.Model):
         return {
             "id": self.pk,
             "author": self.author.username,
+            "authorimage": self.author.image,
             "likes": [user.pk for user in self.likes.all()],
             "content": self.content,
             "timestamp": self.timestamp.strftime("%b. %d, %Y, at %I:%M %p"),

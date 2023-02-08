@@ -24,6 +24,15 @@
     color: inherit;
 }
 
+.post-author-image {
+    border: 1px solid rgb(155, 120, 120);
+    border-radius: 25%;
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+    margin-right: 5px;
+}
+
 .post-timestamp {
     text-decoration: underline;
 }
@@ -288,6 +297,7 @@
 
 .user-img {
     height: 75%;
+    object-fit: cover;
     border-radius: 10%;
     border: 1px solid rgb(155, 120, 120);
 }
