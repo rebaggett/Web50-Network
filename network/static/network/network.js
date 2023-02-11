@@ -1,23 +1,10 @@
 let textClick = false;
 let editContent = false;
-let followersFunction = false;
-let followingFunction = false;
-let likeFunction;
 let imgClick = false;
+let popup = false;
 
 document.addEventListener('DOMContentLoaded', function() {
    
-    // Change profile URL to username
-    const profile_link = document.querySelector('#user-profile-link');
-    const user_id = profile_link.dataset.id;
-    // if (window.location.href.endsWith(`/${user_id}`)) {
-    //     let username = profile_link.dataset.username;
-    //     username = username.replace(/ /g,"_");
-    //     window.history.pushState({username: username}, "", `${username}`);
-    //     const popStateEvent = new PopStateEvent('popstate', {username: username});
-    //     this.dispatchEvent(popStateEvent);
-    // }
-
     // Add event listeners
     document.querySelector('#new-post-button').addEventListener('click', () => create_post());
     document.getElementById('popup-close').addEventListener('click', ()=> close_popup());
@@ -239,6 +226,7 @@ function follow_user(profile, user){
     })
     .then(response => response.json())
     .then(profile => {
+        console.log
         const followerDiv = document.getElementById(`followers-div`);
         const followers = followerDiv.querySelector('.follow-body');
         const followBtn = document.getElementById('follow-button');
@@ -340,29 +328,22 @@ function get_followers(id){
     const popupBody = document.getElementById('popup-body');
     const popupHeadText = document.getElementById('popup-head-text');
 
-    // If function has already been run, make sure it's visible then end
-    if (followersFunction === true) {
-        if (popupDiv.style.visibility === 'hidden') {
-            popupDiv.style.visibility = 'visible';
-        }
-        return false;
+    // If popup is hidden, make it visible
+    if (popupDiv.style.visibility === 'hidden') {
+        popupDiv.style.visibility = 'visible';
     }
-    // If non-follower elements populate the popup, remove them and set other functions to false
-    else if (followingFunction || likeFunction || imgClick ) {
+    // If popup has been called before, remove elements
+    if ( popup ) {
         while(popupBody.lastChild) {
             popupBody.removeChild(popupBody.lastChild);
         }
-        followingFunction = false;
-        likeFunction = false;
-        imgClick = false;
+    } else {
+        popup = true;
     }
     // Shows dialog box and set header info
     popupDiv.style.visibility = 'visible';
     popupHeadText.innerHTML = 'Followers';
 
-    // Do not run function again unless box is closed
-    followersFunction = true;
- 
     generate_popup(id, "followers")    
 }
 
@@ -373,28 +354,21 @@ function get_following(id){
     const popupBody = document.getElementById('popup-body');
     const popupHeadText = document.getElementById('popup-head-text');
 
-    // If function has already been run, make sure it's visible then end
-    if (followingFunction === true) {
-        if (popupDiv.style.visibility === 'hidden') {
-            popupDiv.style.visibility = 'visible';
-        }
-        return false;
+    // If popup is hidden, make it visible
+    if (popupDiv.style.visibility === 'hidden') {
+        popupDiv.style.visibility = 'visible';
     }
-    // If non-follower elements populate the popup, remove them and set other functions to false
-    else if (followersFunction || likeFunction || imgClick ) {
+    // If popup has been called before, remove elements
+    if ( popup ) {
         while(popupBody.lastChild) {
             popupBody.removeChild(popupBody.lastChild);
         }
-        followersFunction = false;
-        likeFunction = false;
-        imgClick = false;
+    } else {
+        popup = true;
     }
     // Shows dialog box and set header info
     popupDiv.style.visibility = 'visible';
     popupHeadText.innerHTML = 'Following';
-
-    // Do not run function again unless box is closed
-    followingFunction = true;
  
     generate_popup(id, "following")    
 }
@@ -406,29 +380,22 @@ function get_likes(id) {
     const popupBody = document.getElementById('popup-body');
     const popupHeadText = document.getElementById('popup-head-text');
 
-    // If function has already been run, make sure it's visible then end
-    if (likeFunction === id) {
-        if (popupDiv.style.visibility === 'hidden') {
-            popupDiv.style.visibility = 'visible';
-        }
-        return false;
+    // If popup is hidden, make it visible
+    if (popupDiv.style.visibility === 'hidden') {
+        popupDiv.style.visibility = 'visible';
     }
-    // If non-follower elements populate the popup, remove them and set other functions to false
-    else if (followersFunction || followingFunction || imgClick || likeFunction != id ) {
+    // If popup has been called before, remove elements
+    if ( popup ) {
         while(popupBody.lastChild) {
             popupBody.removeChild(popupBody.lastChild);
         }
-        followersFunction = false;
-        followingFunction = false;
-        imgClick = false;
+    } else {
+        popup = true;
     }
     // Shows dialog box and set header info
     popupDiv.style.visibility = 'visible';
     popupHeadText.innerHTML = 'Users who liked this post';
 
-    // Do not run function again unless box is closed
-    likeFunction = id;
- 
     generate_popup(id, "likes")
 
 }
